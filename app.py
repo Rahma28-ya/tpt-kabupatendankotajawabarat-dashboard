@@ -20,9 +20,7 @@ from streamlit_option_menu import option_menu
 
 warnings.filterwarnings("ignore")
 
-# ============================================================
 # KONFIGURASI HALAMAN
-# ============================================================
 st.set_page_config(
     page_title="Dashboard TPT Jawa Barat",
     page_icon="📊",
@@ -45,9 +43,7 @@ FEATURE_LABEL = {
 SKENARIO_LIST = ["80_20", "70_30", "60_40"]
 SKENARIO_LABEL = {"80_20": "80/20", "70_30": "70/30", "60_40": "60/40"}
 
-# ============================================================
 # PALET WARNA: PINK PASTEL, UNGU PASTEL, BIRU
-# ============================================================
 C_PINK = "#FF8FB1"
 C_PINK_SOFT = "#FFD6E8"
 C_PURPLE = "#A66CFF"
@@ -66,9 +62,7 @@ SEQ_COLORSCALE = [
 ]
 CAT_COLORS = [C_PURPLE, C_PINK, C_BLUE, "#C77DFF", "#FFADC6", "#80CFFF"]
 
-# ============================================================
 # CSS KUSTOM
-# ============================================================
 st.markdown(
     f"""
 <style>
@@ -141,9 +135,7 @@ div[data-testid="stMetric"] {{
     unsafe_allow_html=True,
 )
 
-# ============================================================
 # FUNGSI LOAD DATA (CACHED)
-# ============================================================
 @st.cache_data
 def load_integrated():
     df = pd.read_csv(DATA_DIR / "data_integrated.csv")
@@ -164,9 +156,7 @@ def load_geojson():
         return json.load(f)
 
 
-# ============================================================
 # FUNGSI MODEL (CACHED)
-# ============================================================
 @st.cache_resource
 def train_evaluate_all_scenarios():
     """Mereplikasi pipeline asli: melatih RLB & RF pada 3 skenario split."""
@@ -247,9 +237,7 @@ def proyeksi_linear(series_tahun, series_nilai, tahun_target):
     return float(np.polyval(coef, tahun_target))
 
 
-# ============================================================
 # LOAD DATA UTAMA
-# ============================================================
 df_all = load_integrated()
 geojson_jabar = load_geojson()
 df_eval, detail_pred = train_evaluate_all_scenarios()
@@ -261,9 +249,7 @@ best_row = df_eval.loc[df_eval["R2"].idxmax()]
 BEST_SKENARIO = best_row["Skenario"]
 BEST_MODEL = best_row["Model"]
 
-# ============================================================
 # SIDEBAR NAVIGASI
-# ============================================================
 with st.sidebar:
     st.markdown(
         f"""
@@ -313,9 +299,7 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-# ============================================================
 # HALAMAN: BERANDA
-# ============================================================
 if menu == "Beranda":
     st.markdown(
         f"""
@@ -405,9 +389,7 @@ if menu == "Beranda":
         f"RMSE = {best_row['RMSE']:.3f}. Lihat detail di menu **Evaluasi Model**."
     )
 
-# ============================================================
 # HALAMAN: PETA JAWA BARAT
-# ============================================================
 elif menu == "Peta Jawa Barat":
     st.markdown("## 🗺️ Peta Sebaran TPT Jawa Barat")
     st.caption("Choropleth TPT per kabupaten/kota — pilih tahun untuk melihat persebarannya.")
@@ -443,9 +425,7 @@ elif menu == "Peta Jawa Barat":
     with c2:
         st.success(f"🔻 **TPT terendah {tahun_map}:** {terendah['Kabupaten_Kota']} — {terendah['TPT']:.2f}%")
 
-# ============================================================
 # HALAMAN: TREN PROVINSI
-# ============================================================
 elif menu == "Tren Provinsi":
     st.markdown("## 📈 Tren TPT Provinsi Jawa Barat (2018–2025)")
 
@@ -502,9 +482,7 @@ elif menu == "Tren Provinsi":
     else:
         st.caption("Pilih satu atau lebih kabupaten/kota di atas untuk melihat tren individualnya.")
 
-# ============================================================
 # HALAMAN: AKTUAL VS PREDIKSI
-# ============================================================
 elif menu == "Aktual vs Prediksi":
     st.markdown("## 🎯 Data Aktual vs Prediksi")
     st.caption("Bandingkan nilai TPT aktual dengan hasil prediksi model pada data uji (test set).")
@@ -575,9 +553,7 @@ elif menu == "Aktual vs Prediksi":
         use_container_width=True, height=400,
     )
 
-# ============================================================
 # HALAMAN: EVALUASI MODEL
-# ============================================================
 elif menu == "Evaluasi Model":
     st.markdown("## 📐 Evaluasi Error Model")
     st.caption("Perbandingan metrik MAE, RMSE, dan R² untuk setiap model & skenario pembagian data.")
@@ -620,9 +596,7 @@ elif menu == "Evaluasi Model":
                                coloraxis_showscale=False, margin=dict(l=0, r=0, t=10, b=0))
         st.plotly_chart(fig_imp, use_container_width=True)
 
-# ============================================================
 # HALAMAN: PREDIKSI TPT (FAKTOR YANG MEMPENGARUHI + TPT 2026)
-# ============================================================
 elif menu == "Prediksi TPT":
     st.markdown("## 🔮 Prediksi TPT Berdasarkan Faktor Pengaruh")
     tab1, tab2 = st.tabs(["🧮 Prediksi Manual (Input Faktor)", "📅 Proyeksi TPT 2026 (Seluruh Wilayah)"])
@@ -763,9 +737,7 @@ elif menu == "Prediksi TPT":
         else:
             st.info("Klik tombol di atas untuk menghitung proyeksi TPT 2026 seluruh kabupaten/kota.")
 
-# ============================================================
 # HALAMAN: DATA LENGKAP
-# ============================================================
 elif menu == "Data Lengkap":
     st.markdown("## 📋 Tabel Data TPT Jawa Barat (2018–2025)")
 
@@ -805,9 +777,7 @@ elif menu == "Data Lengkap":
         use_container_width=True,
     )
 
-# ============================================================
 # FOOTER
-# ============================================================
 st.markdown(
     """
     <div class="footer-note">
